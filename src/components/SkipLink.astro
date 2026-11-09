@@ -1,0 +1,21 @@
+<a class="skip-link" href="#main" set:text="Skip to main content" />
+
+<style>
+  .skip-link {
+    position: absolute;
+    top: var(--space-s);
+    left: var(--space-s);
+    z-index: 10;
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius);
+    background: var(--color-button-bg);
+    color: var(--color-button-text);
+    font-weight: var(--weight-strong);
+    text-decoration: none;
+    transform: translateY(-300%);
+  }
+
+  .skip-link:focus {
+    transform: none;
+  }
+</style>

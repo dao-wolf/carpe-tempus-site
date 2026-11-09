@@ -1,0 +1,156 @@
+---
+import CallToAction from "../../components/CallToAction.astro"
+import PageHeader from "../../components/PageHeader.astro"
+import { site } from "../../config/site"
+import BaseLayout from "../../layouts/BaseLayout.astro"
+import { getServices, getSolutions, practiceLabel } from "../../lib/content"
+import { breadcrumbNode, organizationRef } from "../../lib/structured-data"
+
+const services = await getServices()
+const solutions = await getSolutions()
+
+const jsonLd = [
+  organizationRef(site),
+  breadcrumbNode(site, [{ name: "Packages", path: "/packages/" }]),
+]
+---
+
+<BaseLayout
+  title="Packages"
+  description="Packages from Carpe Tempus, from an Engineering Health Check to a Paid Social Audit, each with a defined scope and a clear deliverable."
+  jsonLd={jsonLd}
+>
+  <PageHeader
+    eyebrow="Packages"
+    title="Packages with a defined scope"
+    lede="Each package has a set scope, a clear deliverable and a named outcome. Start with one, combine them, or ask us to shape something around you."
+  />
+
+  <div class="section">
+    <div class="container">
+      <ol class="solutions list-reset">
+        {solutions.map((solution, index) => (
+          <li>
+            <article
+              class="solution"
+              id={solution.id}
+              aria-labelledby={`${solution.id}-title`}
+            >
+              <div class="solution-intro">
+                <p class="eyebrow">
+                  <span class="solution-number" aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  {practiceLabel(solution.data.practice, services)}
+                </p>
+                <h2 id={`${solution.id}-title`}>{solution.data.title}</h2>
+                <p class="lede">{solution.data.summary}</p>
+              </div>
+              <dl class="solution-details">
+                <div>
+                  <dt>The problem</dt>
+                  <dd>{solution.data.problem}</dd>
+                </div>
+                <div>
+                  <dt>What’s included</dt>
+                  <dd>
+                    <ul class="included">
+                      {solution.data.included.map(item => (
+                        <li>{item}</li>
+                      ))}
+                    </ul>
+                  </dd>
+                </div>
+                <div>
+                  <dt>The outcome</dt>
+                  <dd>{solution.data.outcome}</dd>
+                </div>
+                {solution.data.duration && (
+                  <div>
+                    <dt>Typical duration</dt>
+                    <dd>{solution.data.duration}</dd>
+                  </div>
+                )}
+              </dl>
+            </article>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+
+  <CallToAction
+    title="Not sure where to start?"
+    text="Tell us about your situation and we’ll recommend the right package, or shape one around you."
+  />
+</BaseLayout>
+
+<style>
+  .solutions {
+    display: grid;
+  }
+
+  .solution {
+    display: grid;
+    gap: var(--space-l);
+    padding-block: var(--space-xl);
+    border-top: var(--hairline) solid var(--color-rule);
+    scroll-margin-top: var(--space-l);
+  }
+
+  .solutions > li:first-child .solution {
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .solution-intro {
+    display: grid;
+    align-content: start;
+    gap: var(--space-s);
+  }
+
+  .solution-number {
+    color: var(--color-text-muted);
+  }
+
+  .solution-intro .lede {
+    color: var(--color-text-muted);
+    font-size: var(--step-0);
+  }
+
+  .solution-details {
+    display: grid;
+    gap: var(--space-m);
+    margin: 0;
+  }
+
+  .solution-details dt {
+    margin-bottom: var(--space-3xs);
+    font-weight: var(--weight-strong);
+  }
+
+  .solution-details dd {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  .included {
+    margin: 0;
+    padding-left: 1.25em;
+  }
+
+  .included li + li {
+    margin-top: 0.3em;
+  }
+
+  .included li::marker {
+    color: var(--color-eyebrow);
+  }
+
+  @media (width >= 60rem) {
+    .solution {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+      gap: var(--space-2xl);
+    }
+  }
+</style>

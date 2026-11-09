@@ -1,0 +1,2 @@
+# Type-check, build (tests read dist/), test, then format and lint staged files.
+pnpm check && pnpm build && pnpm test && pnpm exec lint-staged

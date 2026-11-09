@@ -1,0 +1,65 @@
+---
+/** The brand lockup: the oak mark, the wordmark and the motto, linking home. */
+import { site } from "../config/site"
+import Mark from "./Mark.astro"
+
+interface Props {
+  class?: string
+  /** Mark the link as the current page (the home page header). */
+  current?: boolean
+}
+
+const { class: className, current = false } = Astro.props
+---
+
+<a
+  class:list={["lockup", className]}
+  href="/"
+  aria-current={current ? "page" : undefined}
+>
+  <Mark class="lockup-mark" size={48} />
+  <span class="lockup-text">
+    <span class="lockup-name">{site.name}</span>
+    <span class="lockup-motto">{site.motto}</span>
+  </span>
+</a>
+
+<style>
+  .lockup {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    min-height: 2.75rem;
+    text-decoration: none;
+  }
+
+  .lockup-mark {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .lockup-text {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .lockup-name {
+    color: var(--color-heading);
+    font-family: var(--font-display);
+    font-size: clamp(1.125rem, 1rem + 0.5vw, 1.3125rem);
+    font-weight: var(--weight-display);
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .lockup-motto {
+    color: var(--color-eyebrow);
+    font-family: var(--font-body);
+    font-size: 0.6875rem;
+    font-weight: var(--weight-strong);
+    letter-spacing: 0.3em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+</style>

@@ -1,0 +1,56 @@
+---
+import Arrow from "./Arrow.astro"
+
+interface Props {
+  /** Sequence label such as "01". */
+  index: string
+  title: string
+  summary: string
+  highlights: readonly string[]
+  href: string
+}
+
+const { index, title, summary, highlights, href } = Astro.props
+---
+
+<article class="practice">
+  <p class="index" aria-hidden="true">
+    {index}
+  </p>
+  <h3>{title}</h3>
+  <p class="practice-summary">{summary}</p>
+  <ul class="practice-list list-reset">
+    {highlights.map(highlight => (
+      <li>{highlight}</li>
+    ))}
+  </ul>
+  <a class="link-arrow practice-link" href={href}>
+    Explore {title} <Arrow />
+  </a>
+</article>
+
+<style>
+  .practice {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+  }
+
+  .practice-summary {
+    max-width: 34rem;
+    color: var(--color-text-muted);
+  }
+
+  .practice-list li {
+    padding-block: 0.7rem;
+    border-top: var(--hairline) solid var(--color-rule);
+  }
+
+  .practice-list li:last-child {
+    border-bottom: var(--hairline) solid var(--color-rule);
+  }
+
+  .practice-link {
+    margin-top: auto;
+  }
+</style>

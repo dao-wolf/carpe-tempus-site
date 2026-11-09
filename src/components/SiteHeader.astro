@@ -1,0 +1,34 @@
+---
+import Lockup from "./Lockup.astro"
+import PrimaryNav from "./PrimaryNav.astro"
+
+const isHome = Astro.url.pathname === "/"
+---
+
+<header class="site-header">
+  <div class="container site-header-inner">
+    <Lockup current={isHome} />
+    <PrimaryNav />
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: var(--hairline) solid var(--color-rule);
+  }
+
+  .site-header-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2xs) var(--space-l);
+    padding-block: var(--space-s) var(--space-2xs);
+  }
+
+  @media (width >= 48rem) {
+    .site-header-inner {
+      padding-block: var(--space-m);
+    }
+  }
+</style>

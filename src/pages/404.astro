@@ -1,0 +1,61 @@
+---
+import Arrow from "../components/Arrow.astro"
+import BaseLayout from "../layouts/BaseLayout.astro"
+---
+
+<BaseLayout
+  title="Page not found"
+  description="This page could not be found. Explore Carpe Tempus’s services and packages, or get in touch."
+  noindex
+>
+  <div class="section not-found">
+    <div class="container">
+      <p class="eyebrow">Error 404</p>
+      <h1>This page has slipped through time</h1>
+      <p class="lede muted">
+        The page you’re looking for doesn’t exist or has moved. These might help
+        instead:
+      </p>
+      <ul class="list-reset links">
+        <li>
+          <a class="link-arrow" href="/">
+            Home <Arrow />
+          </a>
+        </li>
+        <li>
+          <a class="link-arrow" href="/services/">
+            Services <Arrow />
+          </a>
+        </li>
+        <li>
+          <a class="link-arrow" href="/packages/">
+            Packages <Arrow />
+          </a>
+        </li>
+        <li>
+          <a class="link-arrow" href="/contact/">
+            Contact <Arrow />
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .not-found h1 {
+    max-width: 14ch;
+    margin-block: var(--space-s) var(--space-m);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-l);
+    margin-top: var(--space-l);
+  }
+
+  .links a {
+    min-height: 2.75rem;
+  }
+</style>

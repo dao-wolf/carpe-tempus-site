@@ -1,0 +1,92 @@
+---
+import { isActive, primaryNav } from "../config/navigation"
+
+const pathname = Astro.url.pathname
+---
+
+<nav class="primary-nav" aria-label="Primary">
+  <ul class="nav-list list-reset">
+    {primaryNav.map(item => {
+      const current =
+        pathname === item.href
+          ? "page"
+          : isActive(item.href, pathname)
+            ? "true"
+            : undefined
+      return (
+        <li>
+          <a
+            href={item.href}
+            class:list={[
+              "nav-link",
+              { "nav-link--cta": item.href === "/contact/" },
+            ]}
+            aria-current={current}
+          >
+            {item.label}
+          </a>
+        </li>
+      )
+    })}
+  </ul>
+</nav>
+
+<style>
+  .primary-nav {
+    width: 100%;
+  }
+
+  .nav-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3xs) var(--space-s);
+  }
+
+  .nav-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    font-size: 0.9375rem;
+    font-weight: var(--weight-medium);
+    text-decoration-color: transparent;
+    text-underline-offset: 0.45em;
+  }
+
+  .nav-link:hover {
+    text-decoration-color: var(--color-link-underline);
+  }
+
+  .nav-link[aria-current] {
+    text-decoration-color: var(--color-accent);
+    text-decoration-thickness: 2px;
+  }
+
+  .nav-link--cta {
+    padding-inline: 1.1rem;
+    border: var(--hairline) solid var(--color-border);
+    border-radius: var(--radius);
+    transition:
+      background-color var(--duration) var(--ease),
+      color var(--duration) var(--ease);
+  }
+
+  .nav-link--cta:hover,
+  .nav-link--cta[aria-current] {
+    background: var(--color-button-bg);
+    color: var(--color-button-text);
+    text-decoration: none;
+  }
+
+  @media (width >= 48rem) {
+    .primary-nav {
+      width: auto;
+    }
+
+    .nav-list {
+      justify-content: flex-end;
+      gap: var(--space-2xs) var(--space-l);
+    }
+  }
+</style>

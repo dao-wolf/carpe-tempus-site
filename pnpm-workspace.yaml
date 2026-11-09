@@ -1,0 +1,15 @@
+# pnpm 11 reads its settings from this file.
+
+# Refuse package versions published less than a day ago (in minutes), so a
+# compromised release is likely to be caught and pulled first. pnpm 11 has the
+# same default, but quietly lets a too-new version through by adding it to
+# minimumReleaseAgeExclude. Setting it here makes pnpm strict: it asks in a
+# terminal and fails in CI instead. For an urgent fix, allow one version:
+#   minimumReleaseAgeExclude:
+#     - astro@7.4.0
+minimumReleaseAge: 1440
+
+# Only packages listed here may run install scripts (pnpm blocks all others).
+allowBuilds:
+  esbuild: true
+  sharp: false

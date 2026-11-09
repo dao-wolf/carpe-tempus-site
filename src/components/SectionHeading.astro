@@ -1,0 +1,46 @@
+---
+/**
+ * Section heading: a short gold rule, an eyebrow label, the h2 and an optional intro (slot).
+ */
+interface Props {
+  id: string
+  eyebrow: string
+  title: string
+}
+
+const { id, eyebrow, title } = Astro.props
+---
+
+<div class="section-heading">
+  <p class="eyebrow">
+    <span class="eyebrow-rule" aria-hidden="true"></span>
+    <span>{eyebrow}</span>
+  </p>
+  <h2 id={id}>{title}</h2>
+  {Astro.slots.has("default") && (
+    <div class="section-intro">
+      <slot />
+    </div>
+  )}
+</div>
+
+<style>
+  .section-heading {
+    display: grid;
+    gap: var(--space-s);
+    max-width: 46rem;
+    margin-bottom: var(--space-xl);
+  }
+
+  .eyebrow-rule {
+    width: 2.5rem;
+    height: var(--hairline);
+    background: var(--color-rule);
+  }
+
+  .section-intro {
+    color: var(--color-text-muted);
+    font-size: var(--step-1);
+    line-height: 1.55;
+  }
+</style>

@@ -1,0 +1,37 @@
+{
+  "Name": "carpe-tempus-security-headers",
+  "Comment": "Security headers for the Carpe Tempus site. See docs/adr/003-hosting-s3-cloudfront.md.",
+  "SecurityHeadersConfig": {
+    "ContentSecurityPolicy": {
+      "Override": true,
+      "ContentSecurityPolicy": "default-src 'none'; script-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests"
+    },
+    "ContentTypeOptions": { "Override": true },
+    "FrameOptions": { "Override": true, "FrameOption": "DENY" },
+    "ReferrerPolicy": {
+      "Override": true,
+      "ReferrerPolicy": "strict-origin-when-cross-origin"
+    },
+    "StrictTransportSecurity": {
+      "Override": true,
+      "AccessControlMaxAgeSec": 31536000,
+      "IncludeSubdomains": true,
+      "Preload": false
+    }
+  },
+  "CustomHeadersConfig": {
+    "Quantity": 2,
+    "Items": [
+      {
+        "Header": "Permissions-Policy",
+        "Value": "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), browsing-topics=()",
+        "Override": true
+      },
+      {
+        "Header": "Cross-Origin-Opener-Policy",
+        "Value": "same-origin",
+        "Override": true
+      }
+    ]
+  }
+}

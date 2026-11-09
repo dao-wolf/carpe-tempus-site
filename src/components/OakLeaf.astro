@@ -1,0 +1,49 @@
+---
+/**
+ * Decorative English oak leaf: a soft stone fill with a fine gold outline and veins.
+ * The outline is generated in lib/brand.ts from a fixed seed, so it never changes between builds.
+ */
+import { oakLeaf } from "../lib/brand"
+
+interface Props {
+  class?: string
+}
+
+const { class: className } = Astro.props
+const leaf = oakLeaf()
+---
+
+<svg
+  class:list={["oak-leaf", className]}
+  viewBox="0 0 100 100"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path class="oak-leaf-outline" d={leaf.outline}></path>
+  <path class="oak-leaf-veins" d={leaf.veins}></path>
+</svg>
+
+<style>
+  .oak-leaf {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .oak-leaf-outline {
+    fill: var(--color-illustration-fill);
+    stroke: var(--color-ornament);
+    stroke-width: 1.25;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .oak-leaf-veins {
+    fill: none;
+    stroke: var(--color-ornament);
+    stroke-width: 1;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+</style>

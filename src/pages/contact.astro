@@ -1,0 +1,221 @@
+---
+import Arrow from "../components/Arrow.astro"
+import ExternalLink from "../components/ExternalLink.astro"
+import PageHeader from "../components/PageHeader.astro"
+import { primaryUrl, site } from "../config/site"
+import BaseLayout from "../layouts/BaseLayout.astro"
+import { linkLabel } from "../lib/links"
+import { breadcrumbNode, organizationRef } from "../lib/structured-data"
+
+const { company } = site
+
+const nextSteps = [
+  "We reply to arrange a short introductory call at a time that suits you.",
+  "We listen, ask questions and suggest a sensible first step.",
+  "If we’re a good fit, we agree a clear scope and get started.",
+]
+
+const jsonLd = [
+  organizationRef(site),
+  breadcrumbNode(site, [{ name: "Contact", path: "/contact/" }]),
+]
+---
+
+<BaseLayout
+  title="Contact"
+  description="Talk to Carpe Tempus about product engineering, quality engineering, test automation or paid social marketing."
+  jsonLd={jsonLd}
+>
+  <PageHeader
+    eyebrow="Contact"
+    title="Talk to us"
+    lede="Tell us about your product or your campaigns, and what you want to achieve. We’ll reply to arrange a short introductory call."
+  />
+
+  <section class="section" aria-labelledby="reach-title">
+    <div class="container contact-grid">
+      <div class="contact-routes">
+        <h2 id="reach-title" class="visually-hidden">
+          How to reach us
+        </h2>
+
+        <div class="route">
+          <p class="eyebrow">Email</p>
+          <p class="route-primary">
+            <a href={`mailto:${site.email}`}>{site.email}</a>
+          </p>
+        </div>
+
+        <div class="route">
+          <p class="eyebrow">LinkedIn</p>
+          <p>
+            <ExternalLink href={site.social.linkedin} class="link-arrow">
+              Follow Carpe Tempus on LinkedIn <Arrow />
+            </ExternalLink>
+          </p>
+        </div>
+
+        <div class="route">
+          <p class="eyebrow">The founders</p>
+          <ul class="list-reset founder-routes">
+            {site.founders.map(founder => (
+              <li>
+                <ExternalLink href={primaryUrl(founder)}>
+                  {founder.name}
+                </ExternalLink>
+                <span class="muted"> · {linkLabel(primaryUrl(founder))}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <aside class="next-steps" aria-labelledby="next-title">
+        <h2 id="next-title">What happens next</h2>
+        <ol class="steps list-reset">
+          {nextSteps.map((step, index) => (
+            <li>
+              <span class="index step-index" aria-hidden="true">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <span>{step}</span>
+            </li>
+          ))}
+        </ol>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="company-title">
+    <div class="container">
+      <h2 id="company-title" class="company-title">
+        Company details
+      </h2>
+      <dl class="company">
+        <div>
+          <dt>Registered name</dt>
+          <dd>{company.legalName}</dd>
+        </div>
+        <div>
+          <dt>Registered in</dt>
+          <dd>{company.jurisdiction}</dd>
+        </div>
+        <div>
+          <dt>Company number</dt>
+          <dd>
+            <ExternalLink href={company.companiesHouseUrl}>
+              {company.number}
+            </ExternalLink>
+          </dd>
+        </div>
+        <div>
+          <dt>Registered office</dt>
+          <dd>
+            {company.registeredOffice ? (
+              company.registeredOffice.join(", ")
+            ) : (
+              <span class="pending">To be confirmed</span>
+            )}
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact-grid {
+    display: grid;
+    gap: var(--space-2xl);
+  }
+
+  .contact-routes {
+    display: grid;
+    gap: var(--space-xl);
+    align-content: start;
+  }
+
+  .route {
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  .route-primary {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-weight: var(--weight-display);
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
+
+  .next-steps {
+    align-self: start;
+    padding: var(--space-l);
+    border: var(--hairline) solid var(--color-rule);
+    background: var(--color-bg-alt);
+  }
+
+  .next-steps h2 {
+    margin-bottom: var(--space-m);
+    font-size: var(--step-2);
+  }
+
+  .steps {
+    display: grid;
+    gap: var(--space-m);
+  }
+
+  .steps li {
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: var(--space-s);
+  }
+
+  .founder-routes li + li {
+    margin-top: var(--space-2xs);
+  }
+
+  .step-index {
+    padding-top: 0.35em;
+  }
+
+  .company-title {
+    margin-bottom: var(--space-l);
+    font-size: var(--step-2);
+  }
+
+  .company {
+    display: grid;
+    gap: var(--space-m);
+    margin: 0;
+  }
+
+  .company dt {
+    color: var(--color-eyebrow);
+    font-size: var(--eyebrow-size);
+    font-weight: var(--weight-strong);
+    letter-spacing: var(--eyebrow-tracking);
+    text-transform: uppercase;
+  }
+
+  .company dd {
+    margin: var(--space-3xs) 0 0;
+  }
+
+  .pending {
+    font-style: italic;
+  }
+
+  @media (width >= 48rem) {
+    .company {
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-l);
+    }
+  }
+
+  @media (width >= 60rem) {
+    .contact-grid {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    }
+  }
+</style>

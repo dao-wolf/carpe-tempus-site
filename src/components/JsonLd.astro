@@ -1,0 +1,11 @@
+---
+import { serialiseGraph, type JsonLdNode } from "../lib/structured-data"
+
+interface Props {
+  nodes: readonly JsonLdNode[]
+}
+
+const json = serialiseGraph(Astro.props.nodes)
+---
+
+<script type="application/ld+json" set:html={json} />

@@ -1,0 +1,37 @@
+---
+import Arrow from "./Arrow.astro"
+
+interface Props {
+  id: string
+  title: string
+  practiceLabel: string
+  summary: string
+}
+
+const { id, title, practiceLabel, summary } = Astro.props
+---
+
+<article class="solution-card">
+  <p class="eyebrow">{practiceLabel}</p>
+  <h3>{title}</h3>
+  <p class="muted">{summary}</p>
+  <a class="link-arrow" href={`/packages/#${id}`}>
+    Find out more<span class="visually-hidden"> about the {title}</span>
+    <Arrow />
+  </a>
+</article>
+
+<style>
+  .solution-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    padding-top: var(--space-m);
+    border-top: var(--hairline) solid var(--color-rule);
+  }
+
+  .solution-card .link-arrow {
+    margin-top: auto;
+    padding-top: var(--space-2xs);
+  }
+</style>

@@ -1,0 +1,157 @@
+---
+import { primaryNav } from "../config/navigation"
+import { primaryUrl, site } from "../config/site"
+import { linkLabel } from "../lib/links"
+import ExternalLink from "./ExternalLink.astro"
+import Lockup from "./Lockup.astro"
+
+const { company } = site
+const year = new Date().getFullYear()
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <Lockup />
+        <p class="footer-tagline">
+          Product engineering and paid social marketing consultancy, founded in
+          London in 2019.
+        </p>
+      </div>
+
+      <nav class="footer-col" aria-label="Footer">
+        <h2 class="footer-heading">Explore</h2>
+        <ul class="footer-list list-reset">
+          {primaryNav.map(item => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="footer-col">
+        <h2 class="footer-heading">Founders</h2>
+        <ul class="footer-list list-reset">
+          {site.founders.map(founder => (
+            <li>
+              <ExternalLink href={primaryUrl(founder)}>
+                {founder.name}
+              </ExternalLink>
+              <span class="footer-note">
+                {" "}
+                · {linkLabel(primaryUrl(founder))}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h2 class="footer-heading">Connect</h2>
+        <ul class="footer-list list-reset">
+          <li>
+            <a href={`mailto:${site.email}`}>{site.email}</a>
+          </li>
+          <li>
+            <ExternalLink href={site.social.linkedin}>
+              Carpe Tempus on LinkedIn
+            </ExternalLink>
+          </li>
+          <li>
+            <a href="/privacy/">Privacy notice</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-legal">
+      <p>
+        © {year}
+        {company.legalName}. Registered in {company.jurisdiction}. Company
+        number {company.number}.
+      </p>
+      <p>
+        Registered office:{" "}
+        {company.registeredOffice ? (
+          company.registeredOffice.join(", ")
+        ) : (
+          <span class="pending">to be confirmed</span>
+        )}
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: var(--space-2xl) var(--space-l);
+    border-top: var(--hairline) solid var(--color-rule);
+    font-size: var(--step-minus-1);
+  }
+
+  .footer-grid {
+    display: grid;
+    gap: var(--space-xl) var(--space-l);
+  }
+
+  .footer-tagline {
+    max-width: 22rem;
+    margin-top: var(--space-s);
+    color: var(--color-text-muted);
+  }
+
+  .footer-heading {
+    margin-bottom: var(--space-xs);
+    color: var(--color-eyebrow);
+    font-family: var(--font-body);
+    font-size: var(--eyebrow-size);
+    font-weight: var(--weight-strong);
+    letter-spacing: var(--eyebrow-tracking);
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  .footer-list a {
+    display: inline-block;
+    padding-block: 0.3rem;
+  }
+
+  .footer-note {
+    color: var(--color-text-muted);
+  }
+
+  .footer-legal {
+    display: grid;
+    gap: var(--space-3xs);
+    margin-top: var(--space-xl);
+    padding-top: var(--space-m);
+    border-top: var(--hairline) solid var(--color-rule);
+    color: var(--color-text-muted);
+  }
+
+  .pending {
+    font-style: italic;
+  }
+
+  @media (width >= 48rem) {
+    .footer-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .footer-brand {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (width >= 64rem) {
+    .footer-grid {
+      grid-template-columns: 1.6fr 1fr 1.3fr 1.3fr;
+    }
+
+    .footer-brand {
+      grid-column: auto;
+    }
+  }
+</style>

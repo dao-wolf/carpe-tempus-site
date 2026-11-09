@@ -1,0 +1,78 @@
+{
+  "extends": "stylelint-config-standard",
+  "rules": {
+    "color-named": "never",
+    "color-no-hex": [
+      true,
+      {
+        "message": "Use a colour token such as var(--color-text) from src/styles/tokens.css instead of a hex value."
+      }
+    ],
+    "function-disallowed-list": [
+      [
+        "rgb",
+        "rgba",
+        "hsl",
+        "hsla",
+        "hwb",
+        "lab",
+        "lch",
+        "oklab",
+        "oklch",
+        "color"
+      ],
+      {
+        "message": "Use a colour token from src/styles/tokens.css instead of a colour function (color-mix() with tokens is allowed)."
+      }
+    ],
+    "function-url-scheme-disallowed-list": [
+      ["data"],
+      {
+        "message": "data: URIs break the Content Security Policy; reference a file instead."
+      }
+    ],
+    "declaration-property-value-allowed-list": [
+      {
+        "font-family": ["/^var\\(--font-/", "inherit"]
+      },
+      {
+        "message": "Use a font token such as var(--font-body) from src/styles/tokens.css."
+      }
+    ],
+    "function-linear-gradient-no-nonstandard-direction": true,
+    "function-no-unknown": true,
+    "unit-no-unknown": true,
+    "selector-pseudo-class-no-unknown": [
+      true,
+      {
+        "ignorePseudoClasses": ["global"]
+      }
+    ],
+    "selector-class-pattern": [
+      "^[a-z][a-z0-9]*(-[a-z0-9]+)*(--[a-z0-9]+(-[a-z0-9]+)*)?$",
+      {
+        "message": "Use kebab-case class names, optionally with a BEM-style --modifier."
+      }
+    ]
+  },
+  "ignoreFiles": [
+    "dist/**",
+    ".astro/**",
+    "node_modules/**",
+    "playwright-report/**",
+    "test-results/**"
+  ],
+  "overrides": [
+    {
+      "files": ["**/*.astro"],
+      "customSyntax": "postcss-html"
+    },
+    {
+      "files": ["src/styles/tokens.css"],
+      "rules": {
+        "color-no-hex": null,
+        "function-disallowed-list": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,225 @@
+---
+import type { GetStaticPaths } from "astro"
+import { render } from "astro:content"
+import CallToAction from "../../components/CallToAction.astro"
+import FounderCard from "../../components/FounderCard.astro"
+import PageHeader from "../../components/PageHeader.astro"
+import SectionHeading from "../../components/SectionHeading.astro"
+import SolutionCard from "../../components/SolutionCard.astro"
+import { site } from "../../config/site"
+import BaseLayout from "../../layouts/BaseLayout.astro"
+import {
+  getFounders,
+  getServices,
+  getSolutions,
+  practiceLabel,
+  type Service,
+} from "../../lib/content"
+import {
+  breadcrumbNode,
+  organizationRef,
+  serviceNode,
+} from "../../lib/structured-data"
+
+export const getStaticPaths = (async () => {
+  const services = await getServices()
+  return services.map(service => ({
+    params: { slug: service.id },
+    props: { service },
+  }))
+}) satisfies GetStaticPaths
+
+interface Props {
+  service: Service
+}
+
+const { service } = Astro.props
+const { data } = service
+const path = `/services/${service.id}/`
+
+const services = await getServices()
+const solutions = (await getSolutions()).filter(
+  s => s.data.practice === service.id || s.data.practice === "both",
+)
+const lead = (await getFounders()).find(f => f.id === data.lead)
+const { Content } = await render(service)
+
+const jsonLd = [
+  organizationRef(site),
+  serviceNode(site, {
+    name: data.title,
+    description: data.description,
+    serviceType: data.serviceType,
+    path,
+  }),
+  breadcrumbNode(site, [
+    { name: "Services", path: "/services/" },
+    { name: data.title, path },
+  ]),
+]
+---
+
+<BaseLayout title={data.title} description={data.description} jsonLd={jsonLd}>
+  <PageHeader
+    eyebrow="Service"
+    title={data.title}
+    lede={data.lede}
+    breadcrumbs={[{ label: "Services", href: "/services/" }]}
+  />
+
+  <section class="section" aria-labelledby="offer-title">
+    <div class="container">
+      <SectionHeading
+        id="offer-title"
+        eyebrow="What we offer"
+        title="How we can help"
+      />
+      <ul class="offerings list-reset">
+        {data.offerings.map(offering => (
+          <li class="offering">
+            <h3>{offering.title}</h3>
+            <p class="muted">{offering.description}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="approach-title">
+    <div class="container split">
+      <div>
+        <SectionHeading
+          id="approach-title"
+          eyebrow="Our approach"
+          title="How we work with you"
+        />
+        <div class="prose approach">
+          <Content />
+        </div>
+      </div>
+      <div class="audience">
+        <h3 class="audience-title">Who it’s for</h3>
+        <ul class="audience-list list-reset">
+          {data.audience.map(item => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  {solutions.length > 0 && (
+    <section class="section" aria-labelledby="related-title">
+      <div class="container">
+        <SectionHeading
+          id="related-title"
+          eyebrow="Packages"
+          title="Ways to get started"
+        />
+        <div class="card-grid">
+          {solutions.map(solution => (
+            <SolutionCard
+              id={solution.id}
+              title={solution.data.title}
+              practiceLabel={practiceLabel(solution.data.practice, services)}
+              summary={solution.data.summary}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  {lead && (
+    <section class="section section--ruled" aria-labelledby="lead-title">
+      <div class="container">
+        <SectionHeading
+          id="lead-title"
+          eyebrow="Your lead"
+          title="Who you’ll work with"
+        />
+        <div class="lead">
+          <FounderCard
+            name={lead.name}
+            role={lead.role}
+            website={lead.website}
+            linkedin={lead.linkedin}
+          >
+            <p>{lead.summary}</p>
+          </FounderCard>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <CallToAction />
+</BaseLayout>
+
+<style>
+  .offerings {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  .offering {
+    display: grid;
+    gap: var(--space-2xs);
+    align-content: start;
+    padding-top: var(--space-m);
+    border-top: var(--hairline) solid var(--color-rule);
+  }
+
+  .split {
+    display: grid;
+    gap: var(--space-2xl);
+  }
+
+  .approach {
+    font-size: var(--step-1);
+    line-height: 1.6;
+  }
+
+  .audience {
+    align-self: start;
+    padding: var(--space-l);
+    border: var(--hairline) solid var(--color-rule);
+    background: var(--color-bg);
+  }
+
+  .audience-title {
+    margin-bottom: var(--space-s);
+  }
+
+  .audience-list li {
+    padding-block: 0.6rem;
+    border-top: var(--hairline) solid var(--color-rule);
+  }
+
+  .card-grid {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .lead {
+    max-width: 44rem;
+  }
+
+  @media (width >= 48rem) {
+    .offerings {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-xl) var(--space-2xl);
+    }
+
+    .card-grid {
+      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+      gap: var(--space-l);
+    }
+  }
+
+  @media (width >= 60rem) {
+    .split {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      align-items: start;
+    }
+  }
+</style>

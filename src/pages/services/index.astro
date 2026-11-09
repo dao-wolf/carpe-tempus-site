@@ -1,0 +1,134 @@
+---
+import CallToAction from "../../components/CallToAction.astro"
+import PageHeader from "../../components/PageHeader.astro"
+import PracticeCard from "../../components/PracticeCard.astro"
+import SectionHeading from "../../components/SectionHeading.astro"
+import { site } from "../../config/site"
+import BaseLayout from "../../layouts/BaseLayout.astro"
+import { getServices } from "../../lib/content"
+import { breadcrumbNode, organizationRef } from "../../lib/structured-data"
+
+const services = await getServices()
+
+const models = [
+  {
+    title: "Packages",
+    text: "A defined scope and a clear deliverable, such as an Engineering Health Check or a Paid Social Audit.",
+  },
+  {
+    title: "Hands-on delivery",
+    text: "We join your team to build, test and launch, whether that’s software or campaigns, then hand over cleanly.",
+  },
+  {
+    title: "Fractional leadership",
+    text: "An experienced leader for a few days a month, without the cost or commitment of a full-time hire.",
+  },
+  {
+    title: "Coaching and workshops",
+    text: "Regular coaching for leaders and practitioners, and focused sessions for teams and events.",
+  },
+]
+
+const jsonLd = [
+  organizationRef(site),
+  breadcrumbNode(site, [{ name: "Services", path: "/services/" }]),
+]
+---
+
+<BaseLayout
+  title="Services"
+  description="Product engineering and paid social marketing from Carpe Tempus, as packages, hands-on delivery, fractional leadership or coaching."
+  jsonLd={jsonLd}
+>
+  <PageHeader
+    eyebrow="Services"
+    title="Product engineering and paid social marketing"
+    lede="Two services, each led by a founder. Use one or both, as a defined package, hands-on delivery, fractional leadership or coaching."
+  />
+
+  <section class="section section--alt" aria-labelledby="practices-title">
+    <div class="container">
+      <h2 id="practices-title" class="visually-hidden">
+        Our services
+      </h2>
+      <div class="practices">
+        {services.map((service, i) => (
+          <PracticeCard
+            index={String(i + 1).padStart(2, "0")}
+            title={service.data.title}
+            summary={service.data.summary}
+            highlights={service.data.highlights}
+            href={`/services/${service.id}/`}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="models-title">
+    <div class="container">
+      <SectionHeading
+        id="models-title"
+        eyebrow="Ways to work with us"
+        title="Pick what fits"
+      >
+        <p>
+          Start with one and add another later, or combine them from the start.
+        </p>
+      </SectionHeading>
+      <ul class="models list-reset">
+        {models.map(model => (
+          <li class="model">
+            <h3>{model.title}</h3>
+            <p class="muted">{model.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <CallToAction />
+</BaseLayout>
+
+<style>
+  .practices {
+    display: grid;
+    gap: var(--space-2xl);
+  }
+
+  .models {
+    display: grid;
+    gap: var(--space-l);
+  }
+
+  .model {
+    display: grid;
+    gap: var(--space-2xs);
+    align-content: start;
+    padding-top: var(--space-m);
+    border-top: var(--hairline) solid var(--color-rule);
+  }
+
+  @media (width >= 48rem) {
+    .models {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-xl) var(--space-2xl);
+    }
+  }
+
+  @media (width >= 60rem) {
+    .practices {
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    .practices > :global(*) {
+      padding-inline: 0 var(--space-2xl);
+    }
+
+    .practices > :global(* + *) {
+      padding-inline: var(--space-2xl) 0;
+      border-left: var(--hairline) solid var(--color-rule);
+    }
+  }
+</style>

@@ -1,0 +1,27 @@
+---
+/**
+ * Link to another site. Opens in the same tab (no target="_blank").
+ * Other sites get rel="noopener noreferrer". The founders' own websites keep the
+ * referrer (rel="noopener") so they can see visits that come from here.
+ */
+import type { HTMLAttributes } from "astro/types"
+import { site } from "../config/site"
+
+interface Props extends HTMLAttributes<"a"> {
+  href: string
+}
+
+const { href, ...attrs } = Astro.props
+
+const familyHosts = new Set(
+  site.founders.flatMap(f => (f.website ? [new URL(f.website).host] : [])),
+)
+const rel = familyHosts.has(new URL(href).host)
+  ? "noopener"
+  : "noopener noreferrer"
+
+// Trim the slot so formatting never leaves an underlined space inside the link.
+const content = (await Astro.slots.render("default")).trim()
+---
+
+<a href={href} rel={rel} {...attrs} set:html={content} />

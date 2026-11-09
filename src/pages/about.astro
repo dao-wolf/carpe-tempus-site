@@ -1,0 +1,186 @@
+---
+import { render } from "astro:content"
+import CallToAction from "../components/CallToAction.astro"
+import FounderCard from "../components/FounderCard.astro"
+import OakLeaf from "../components/OakLeaf.astro"
+import PageHeader from "../components/PageHeader.astro"
+import SectionHeading from "../components/SectionHeading.astro"
+import { site } from "../config/site"
+import BaseLayout from "../layouts/BaseLayout.astro"
+import { getFounders } from "../lib/content"
+import {
+  breadcrumbNode,
+  organizationNode,
+  personNode,
+} from "../lib/structured-data"
+
+const founders = await Promise.all(
+  (await getFounders()).map(async founder => ({
+    ...founder,
+    Content: (await render(founder.entry)).Content,
+  })),
+)
+
+const principles = [
+  {
+    title: "Focus on what matters",
+    text: "We find the few changes that will make the biggest difference, and tell you plainly what isn’t worth doing.",
+  },
+  {
+    title: "Results you can measure",
+    text: "We agree up front how success will be measured, report against it, and let the evidence guide the next step.",
+  },
+  {
+    title: "Skills that stay",
+    text: "We share our tools, playbooks and know-how, so your team can carry on without us.",
+  },
+]
+
+const jsonLd = [
+  organizationNode(site),
+  ...founders.map(f => personNode(site, f, f)),
+  breadcrumbNode(site, [{ name: "About", path: "/about/" }]),
+]
+---
+
+<BaseLayout
+  title="About"
+  description="Carpe Tempus was founded in London in 2019 by Oleg and Chiara Desantis. Oleg leads product engineering; Chiara leads paid social marketing."
+  jsonLd={jsonLd}
+>
+  <PageHeader
+    eyebrow="About"
+    title="About Carpe Tempus"
+    lede="We’re a London consultancy founded in 2019 by Oleg and Chiara Desantis. Oleg leads product engineering and Chiara leads paid social marketing, and you work directly with them."
+  />
+
+  <section class="section" aria-labelledby="principles-title">
+    <div class="container">
+      <SectionHeading
+        id="principles-title"
+        eyebrow="How we work"
+        title="What you can expect"
+      />
+      <ul class="principles list-reset">
+        {principles.map(principle => (
+          <li class="principle">
+            <h3>{principle.title}</h3>
+            <p class="muted">{principle.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--ruled" aria-labelledby="founders-title">
+    <div class="container">
+      <SectionHeading
+        id="founders-title"
+        eyebrow="Who we are"
+        title="The founders"
+      />
+      <div class="founders">
+        {founders.map(founder => (
+          <FounderCard
+            id={founder.id}
+            name={founder.name}
+            role={founder.role}
+            website={founder.website}
+            linkedin={founder.linkedin}
+          >
+            <div class="prose">
+              <founder.Content />
+            </div>
+          </FounderCard>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="name-title">
+    <div class="container oak">
+      <div class="oak-art">
+        <OakLeaf />
+      </div>
+      <div>
+        <SectionHeading
+          id="name-title"
+          eyebrow="Our name"
+          title="Why Carpe Tempus"
+        />
+        <div class="prose story">
+          <p>
+            Carpe tempus is Latin for ‘seize the time’. For us it means acting
+            on the evidence early: fixing the release process before the next
+            incident, or moving budget from the campaign that isn’t working to
+            the one that is.
+          </p>
+          <p>
+            The oak in our logo stands for the long view: work that lasts after
+            we’ve gone.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CallToAction />
+</BaseLayout>
+
+<style>
+  .story {
+    font-size: var(--step-1);
+    line-height: 1.6;
+  }
+
+  .oak {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  .oak-art {
+    width: min(100%, 14rem);
+    justify-self: center;
+  }
+
+  .principles {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .principle {
+    display: grid;
+    gap: var(--space-2xs);
+    align-content: start;
+    padding-top: var(--space-m);
+    border-top: var(--hairline) solid var(--color-rule);
+  }
+
+  .founders {
+    display: grid;
+    gap: var(--space-2xl);
+  }
+
+  @media (width >= 48rem) {
+    .principles {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-l);
+    }
+
+    .founders {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (width >= 60rem) {
+    .oak {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+      gap: var(--space-2xl);
+    }
+
+    .oak-art {
+      width: min(100%, 20rem);
+    }
+  }
+</style>

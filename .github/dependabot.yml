@@ -1,0 +1,51 @@
+# Weekly update PRs: one grouped PR for the SHA-pinned GitHub Actions, and for
+# npm one grouped PR of minor and patch updates plus a PR per major update.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    # Wait before proposing a new release, so a compromised one is likely to be
+    # caught and pulled first.
+    cooldown:
+      default-days: 7
+    groups:
+      actions:
+        patterns: ["*"]
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    # Wait before proposing a new release, so a compromised one is likely to be
+    # caught and pulled first. Security updates don't wait.
+    cooldown:
+      default-days: 7
+      semver-major-days: 14
+    groups:
+      minor-and-patch:
+        update-types: [minor, patch]
+    # update-types only holds back version updates. A bare dependency-name would
+    # also block security updates.
+    ignore:
+      # Pinned to the Chromium build pre-installed in Claude Code cloud sessions.
+      # Upgrade both together, deliberately (see AGENTS.md, Gotchas).
+      # If a security update opens a PR for one of them, move both together.
+      - dependency-name: "@playwright/test"
+        update-types:
+          [
+            "version-update:semver-major",
+            "version-update:semver-minor",
+            "version-update:semver-patch",
+          ]
+      - dependency-name: playwright-core
+        update-types:
+          [
+            "version-update:semver-major",
+            "version-update:semver-minor",
+            "version-update:semver-patch",
+          ]
+      # @astrojs/check does not support TypeScript 7 yet.
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]

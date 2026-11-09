@@ -1,0 +1,66 @@
+---
+/** A founder profile: role, name, bio (slot) and links to their own site and LinkedIn. */
+import { linkLabel } from "../lib/links"
+import Arrow from "./Arrow.astro"
+import ExternalLink from "./ExternalLink.astro"
+
+interface Props {
+  name: string
+  role: string
+  linkedin: string
+  website?: string
+  /** Anchor id, used on the About page to match the JSON-LD Person @id. */
+  id?: string
+}
+
+const { name, role, linkedin, website, id } = Astro.props
+---
+
+<article class="founder" id={id}>
+  <p class="eyebrow">{role}</p>
+  <h3>{name}</h3>
+  <div class="founder-body">
+    <slot />
+  </div>
+  <ul class="founder-links list-reset">
+    {website && (
+      <li>
+        <ExternalLink href={website} class="link-arrow">
+          Visit {linkLabel(website)} <Arrow />
+        </ExternalLink>
+      </li>
+    )}
+    <li>
+      <ExternalLink href={linkedin} class="link-arrow">
+        LinkedIn<span class="visually-hidden">: {name}</span> <Arrow />
+      </ExternalLink>
+    </li>
+  </ul>
+</article>
+
+<style>
+  .founder {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    padding-top: var(--space-m);
+    border-top: var(--hairline) solid var(--color-rule);
+  }
+
+  .founder-body {
+    max-width: var(--measure);
+    color: var(--color-text-muted);
+  }
+
+  .founder-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-l);
+    margin-top: auto;
+    padding-top: var(--space-2xs);
+  }
+
+  .founder-links a {
+    min-height: 2.75rem;
+  }
+</style>

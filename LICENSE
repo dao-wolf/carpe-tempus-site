@@ -1,0 +1,8 @@
+Copyright (c) 2026 Carpe Tempus Ltd. All rights reserved.
+
+This repository is public so that people can read how the Carpe Tempus website
+is built. No licence is granted to copy, modify, distribute or reuse any part of
+it, including the code, the copy, the logo and other images, and the Carpe
+Tempus name.
+
+Third-party packages listed in package.json keep their own licences.

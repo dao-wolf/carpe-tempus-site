@@ -1,0 +1,33 @@
+---
+/**
+ * The home page hero illustration: the oak from the logo, drawn large.
+ * The hero only shows it on wide screens; lazy loading means narrow screens,
+ * where it is hidden, never download it.
+ */
+import { Image } from "astro:assets"
+import oak from "../assets/brand/oak.png"
+
+interface Props {
+  class?: string
+}
+
+const { class: className } = Astro.props
+---
+
+<Image
+  src={oak}
+  alt=""
+  width={432}
+  height={432}
+  widths={[432, 864]}
+  sizes="27rem"
+  class:list={["oak-illustration", className]}
+/>
+
+<style>
+  .oak-illustration {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+</style>

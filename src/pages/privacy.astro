@@ -1,0 +1,100 @@
+---
+import ExternalLink from "../components/ExternalLink.astro"
+import PageHeader from "../components/PageHeader.astro"
+import { site } from "../config/site"
+import BaseLayout from "../layouts/BaseLayout.astro"
+import { breadcrumbNode, organizationRef } from "../lib/structured-data"
+
+// Update this date whenever the notice changes.
+const lastUpdated = "28 September 2026"
+const { company } = site
+
+const jsonLd = [
+  organizationRef(site),
+  breadcrumbNode(site, [{ name: "Privacy notice", path: "/privacy/" }]),
+]
+---
+
+<BaseLayout
+  title="Privacy notice"
+  description="How Carpe Tempus Ltd handles personal information: this website uses no cookies or tracking, and what happens when you contact us."
+  jsonLd={jsonLd}
+>
+  <PageHeader
+    eyebrow="Privacy"
+    title="Privacy notice"
+    lede="How Carpe Tempus Ltd handles personal information when you visit this website or get in touch."
+  />
+
+  <div class="section">
+    <div class="container">
+      <div class="prose notice">
+        <p class="muted">Last updated: {lastUpdated}</p>
+
+        <h2>Who we are</h2>
+        <p>
+          {company.legalName} (“we”, “us”) is a company registered in{" "}
+          {company.jurisdiction} with company number {company.number}. We are
+          the controller of the personal information described in this notice.
+          You can contact us at{" "}
+          <a href={`mailto:${site.email}`}>{site.email}</a>.
+        </p>
+
+        <h2>This website</h2>
+        <p>
+          This website does not use cookies, analytics or any other tracking
+          technology, and it does not load content from third parties such as
+          social networks or advertising platforms.
+        </p>
+        <p>
+          Like any website, it is delivered by a hosting provider – in our case
+          Amazon Web Services – which processes technical information, such as
+          your IP address, in order to deliver pages to you securely. We do not
+          use this information to identify you.
+        </p>
+
+        <h2>When you contact us</h2>
+        <p>
+          If you email us or contact us on LinkedIn, we use your name, contact
+          details and anything you choose to tell us to reply, to arrange
+          conversations and, if we work together, to manage our relationship.
+          Our lawful basis is our legitimate interest in responding to
+          enquiries, or taking steps at your request before entering into a
+          contract.
+        </p>
+        <p>
+          We keep correspondence only for as long as we need it for these
+          purposes, or as the law requires. We never sell your information, and
+          we do not use it for marketing without your permission.
+        </p>
+
+        <h2>Your rights</h2>
+        <p>
+          Under UK data protection law you have the right to access, correct or
+          erase your personal information, to restrict or object to how we use
+          it, and to data portability. To exercise any of these rights, email us
+          at <a href={`mailto:${site.email}`}>{site.email}</a>.
+        </p>
+        <p>
+          If you are unhappy with how we have handled your information, please
+          tell us. You also have the right to complain to the Information
+          Commissioner’s Office (ICO) at{" "}
+          <ExternalLink href="https://ico.org.uk/">ico.org.uk</ExternalLink>.
+        </p>
+
+        <h2>Changes to this notice</h2>
+        <p>
+          We may update this notice from time to time. The date at the top of
+          this page shows when it last changed.
+        </p>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .notice h2 {
+    margin-top: var(--space-xl);
+    font-size: var(--step-2);
+  }
+</style>

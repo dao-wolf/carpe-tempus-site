@@ -1,0 +1,311 @@
+---
+import Arrow from "../components/Arrow.astro"
+import CallToAction from "../components/CallToAction.astro"
+import FounderCard from "../components/FounderCard.astro"
+import OakIllustration from "../components/OakIllustration.astro"
+import PracticeCard from "../components/PracticeCard.astro"
+import SectionHeading from "../components/SectionHeading.astro"
+import SolutionCard from "../components/SolutionCard.astro"
+import { site } from "../config/site"
+import BaseLayout from "../layouts/BaseLayout.astro"
+import {
+  getFounders,
+  getServices,
+  getSolutions,
+  practiceLabel,
+} from "../lib/content"
+import {
+  organizationNode,
+  personNode,
+  websiteNode,
+} from "../lib/structured-data"
+
+const services = await getServices()
+const featured = (await getSolutions()).filter(s => s.data.featured)
+const founders = await getFounders()
+
+const steps = [
+  {
+    title: "Diagnose",
+    text: "We look at how you work today, from your pipelines and test suites to your ad accounts and data, and agree what success looks like before we start.",
+  },
+  {
+    title: "Deliver",
+    text: "We do the work alongside your team: building, testing, launching and optimising. Hands-on where it helps, coaching where it lasts.",
+  },
+  {
+    title: "Hand over",
+    text: "Your team keeps the tools, playbooks and skills, so the results last after we’ve gone.",
+  },
+]
+
+const jsonLd = [
+  organizationNode(site),
+  websiteNode(site),
+  ...founders.map(f => personNode(site, f, f)),
+]
+---
+
+<BaseLayout
+  title="Carpe Tempus – Product engineering & paid social marketing consultancy"
+  description={site.description}
+  jsonLd={jsonLd}
+>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Product engineering · Paid social marketing</p>
+        <h1 id="hero-title">
+          <span class="hero-line">Build better products.</span>
+          <span class="hero-line">Reach the right customers.</span>
+        </h1>
+        <p class="hero-subline">
+          We help your teams ship software faster and with fewer failures, and
+          we run paid social campaigns that show what every pound returns.
+        </p>
+        <p class="hero-body">
+          Carpe Tempus is a London consultancy founded in 2019. You work
+          directly with our founders, specialists who have spent their careers
+          doing this work.
+        </p>
+        <div class="actions hero-actions">
+          <a class="button" href="/contact/">
+            Talk to us <Arrow />
+          </a>
+          <a class="link-arrow" href="/services/">
+            See our services <Arrow />
+          </a>
+        </div>
+      </div>
+      <div class="hero-art">
+        <OakIllustration />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="practices-title">
+    <div class="container">
+      <SectionHeading
+        id="practices-title"
+        eyebrow="What we do"
+        title="Two services, each led by a founder"
+      >
+        <p>
+          Use one or both. Either way, you work with the specialist who leads
+          it, from the first call to the handover.
+        </p>
+      </SectionHeading>
+      <div class="practices">
+        {services.map((service, i) => (
+          <PracticeCard
+            index={String(i + 1).padStart(2, "0")}
+            title={service.data.title}
+            summary={service.data.summary}
+            highlights={service.data.highlights}
+            href={`/services/${service.id}/`}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="approach-title">
+    <div class="container">
+      <SectionHeading
+        id="approach-title"
+        eyebrow="How we work"
+        title="Diagnose, deliver, hand over"
+      >
+        <p>
+          Whether it’s a short workshop or a year of fractional leadership,
+          every engagement follows three steps.
+        </p>
+      </SectionHeading>
+      <ol class="steps list-reset">
+        {steps.map((step, i) => (
+          <li class="step">
+            <span class="index" aria-hidden="true">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <h3>{step.title}</h3>
+            <p class="muted">{step.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="packages-title">
+    <div class="container">
+      <SectionHeading
+        id="packages-title"
+        eyebrow="Packages"
+        title="Ways to get started"
+      >
+        <p>
+          Each package has a defined scope and a clear deliverable, so you know
+          what you’ll get before we start.
+        </p>
+      </SectionHeading>
+      <div class="card-grid">
+        {featured.map(solution => (
+          <SolutionCard
+            id={solution.id}
+            title={solution.data.title}
+            practiceLabel={practiceLabel(solution.data.practice, services)}
+            summary={solution.data.summary}
+          />
+        ))}
+      </div>
+      <p class="section-more">
+        <a class="link-arrow" href="/packages/">
+          See all packages <Arrow />
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="founders-title">
+    <div class="container">
+      <SectionHeading
+        id="founders-title"
+        eyebrow="Who we are"
+        title="You work with the founders"
+      >
+        <p>
+          Carpe Tempus was founded in London in 2019 by Oleg and Chiara
+          Desantis. Each leads the service they built their career in.
+        </p>
+      </SectionHeading>
+      <div class="card-grid card-grid--two">
+        {founders.map(founder => (
+          <FounderCard
+            name={founder.name}
+            role={founder.role}
+            website={founder.website}
+            linkedin={founder.linkedin}
+          >
+            <p>{founder.summary}</p>
+          </FounderCard>
+        ))}
+      </div>
+      <p class="section-more">
+        <a class="link-arrow" href="/about/">
+          More about us <Arrow />
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <CallToAction />
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: clamp(3.5rem, 2rem + 6vw, 7.5rem);
+  }
+
+  .hero-grid {
+    display: grid;
+    align-items: center;
+    gap: var(--space-2xl);
+  }
+
+  /* Smaller than other h1s, so each sentence of the headline fits on one line. */
+  .hero h1 {
+    margin-block: var(--space-m) var(--space-l);
+    font-size: clamp(2.5rem, 1.6rem + 2.8vw, 3.5rem);
+  }
+
+  .hero-line {
+    display: block;
+  }
+
+  .hero-subline {
+    max-width: 36rem;
+    text-wrap: balance;
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: 1.35;
+  }
+
+  .hero-body {
+    max-width: 34rem;
+    margin-top: var(--space-s);
+    color: var(--color-text-muted);
+  }
+
+  .hero-actions {
+    margin-top: var(--space-xl);
+  }
+
+  .hero-art {
+    display: none;
+  }
+
+  .practices {
+    display: grid;
+    gap: var(--space-2xl);
+  }
+
+  .steps {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .step {
+    display: grid;
+    gap: var(--space-s);
+    align-content: start;
+    padding-top: var(--space-m);
+    border-top: var(--hairline) solid var(--color-rule);
+  }
+
+  .card-grid {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .section-more {
+    margin-top: var(--space-xl);
+  }
+
+  @media (width >= 48rem) {
+    .steps,
+    .card-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-l);
+    }
+
+    .card-grid--two {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-2xl);
+    }
+  }
+
+  @media (width >= 60rem) {
+    .hero-grid {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    }
+
+    .hero-art {
+      display: block;
+      justify-self: end;
+      width: min(100%, 27rem);
+    }
+
+    .practices {
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    .practices > :global(*) {
+      padding-inline: 0 var(--space-2xl);
+    }
+
+    .practices > :global(* + *) {
+      padding-inline: var(--space-2xl) 0;
+      border-left: var(--hairline) solid var(--color-rule);
+    }
+  }
+</style>
