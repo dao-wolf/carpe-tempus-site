@@ -86,8 +86,9 @@ jobs:
   deploy:
     name: Deploy to AWS
     needs: validate
-    # Skipped until the repository variable DEPLOY_ENABLED is "true". The role, bucket and
-    # distribution are repository secrets, so this public repository's logs mask them.
+    # Skipped until the repository variable DEPLOY_ENABLED is "true". The role, its unique ID,
+    # the bucket and the distribution are repository secrets, so this public repository's
+    # logs mask them.
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && vars.DEPLOY_ENABLED == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
@@ -107,9 +108,14 @@ jobs:
         env:
           REGION: ${{ vars.AWS_REGION }}
           ROLE: ${{ secrets.AWS_ROLE_ARN }}
+          # The role's unique ID is a secret only so that it is masked: the AWS sign-in
+          # step prints it after "Authenticated as assumedRoleId".
+          ROLE_ID: ${{ secrets.AWS_ROLE_ID }}
         run: |
+          [ -z "$ROLE_ID" ] || echo "::add-mask::$ROLE_ID"
           missing=()
           [ -n "$ROLE" ] || missing+=(AWS_ROLE_ARN)
+          [ -n "$ROLE_ID" ] || missing+=(AWS_ROLE_ID)
           [ -n "$REGION" ] || missing+=(AWS_REGION)
           [ -n "$BUCKET" ] || missing+=(S3_BUCKET)
           [ -n "$DISTRIBUTION_ID" ] || missing+=(CLOUDFRONT_DISTRIBUTION_ID)
