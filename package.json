@@ -41,7 +41,7 @@
     "@astrojs/check": "^0.9.10",
     "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "1.56.1",
-    "@types/node": "^24.0.0",
+    "@types/node": "^26.6.5",
     "cheerio": "^1.2.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
